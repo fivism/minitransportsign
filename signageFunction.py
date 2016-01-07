@@ -47,13 +47,9 @@ def mainloop():
     ## Set current time
     current = datetime.datetime.fromtimestamp(int(time.time())) 
 
-
-
-    
-
-## REPLACE THIS BLOCK WITH NEW FUNCTION
-## 17 nord = 3010531, 17, 1
-## 17 vest = 3010531, 17, 2
+## For example--
+## "17 nord" = 3010531, 17, 1
+## "17 vest" = 3010531, 17, 2
 
 ## Assign trains to track for each line
     top = timeGrabber(3010531,17,2) 
