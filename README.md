@@ -1,5 +1,9 @@
 # minitransportsign
-An exploration of framework for driving home transportation headways signs.
+Micro 'player' for a 16x2 transit arrival times sign
+
+This project requires:
+- lcdbackpack (from pypi repo) for simplified 16x2 char display comms over the
+adafruit USB/i2c backpack
 
 This project consists of two files: 
 
