@@ -59,10 +59,6 @@ def timeGrabber(stopID, vehicleTypes, lineNos, direction):
     return grabbedDict
 
 def mainloop():
-    # Start threading self destruct
-    # t = threading.Timer(15, mainloop)
-    # t.start()
-    
     ## Set current time
     current = datetime.now(timezone.utc)
 
@@ -79,15 +75,15 @@ def mainloop():
     
     if len(top) == 0: 
         topcombo = "17:   n/a"
-    elif len(top) == 1:
-        top1tuple = dateutil.relativedelta.relativedelta(top[0], current) 
-        topcombo = "17: " + str(top1tuple.minutes) + 'm'
-    elif len(top) > 1:
-        top1tuple = dateutil.relativedelta.relativedelta (top[0], current) 
-        top2tuple = dateutil.relativedelta.relativedelta (top[1], current)
-        topcombo = "17: " + str(top1tuple.minutes) + 'm ' + str(top2tuple.minutes) + 'm'
-    else:
-        topcombo = "17:   n/a"   
+    if len(top) > 0:
+        toptuple = dateutil.relativedelta.relativedelta(top[0], current) 
+        topcombo = "17: " + str(top1tuple.minutes) + 'm '
+    if len(top) > 1:
+        toptuple = dateutil.relativedelta.relativedelta(top[1], current)
+        topcombo += str(top2tuple.minutes) + 'm '
+    if len(top) > 2:
+        toptuple = dateutil.relativedelta.relativedelta(top[2], current)
+        topcombo += str(top2tuple.minutes) + 'm'
 
     print(topcombo)
     lcdscreen.clear()
