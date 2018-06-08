@@ -70,9 +70,11 @@ def mainloop():
         if hasattr(e, 'reason'):
             print("Failed to reach server.")
             print("Reason: ", e.reason)
+            lcdscreen.write("NO CONNECT")
         elif hasattr(e, 'code'):
             print("The server could not fill request.")
             print("Error code: ", e.code)
+            lcdscreen.write("ERR: ", e.code)
     else: 
         if (debug): 
             dataDebug(headways)
