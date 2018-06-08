@@ -2,6 +2,12 @@
 ##
 ## Two line sign that shows two departures for two lines simultaneously 
 ## and outputs specifically to a 16x2 character display.
+## Sample calls given for Sofienberg Bus and Tram departures going
+## downtown.
+## https://reisapi.ruter.no/StopVisit/GetDepartures/3010533?transporttypes=Bus,Tram&linenames=17,31
+## Sofienberg = 3010533   
+## Vehicle = Metro/Tram/Bus/Train or combos of "Tram,Bus"    
+## LineNos = 31 or 17 or "31,17"
 
 import json
 import os
@@ -10,7 +16,6 @@ import sys
 from lcdbackpack import LcdBackpack
 import urllib.request
 from collections import defaultdict
-#from urllib2 import urlopen
 import urllib.error
 import time
 from datetime import datetime, timezone 
@@ -21,7 +26,7 @@ from time import sleep
 
 # timeGrabber used once per update, calls all applicable for one stop  
 # One stopID and multiple vehicles and line numbers possible
-
+# A couple shortened keys to keep it simple
 MVJ = 'MonitoredVehicleJourney'
 EAT = 'ExpectedArrivalTime'
 debug = False
@@ -41,20 +46,13 @@ def dataDebug(extract):
     print(extract['31'])
 
 def timeGrabber(stopID, vehicleTypes, lineNos, direction):
-    # Sofienberg = 3010533 
-    # Vehicle = Metro/Tram/Bus/Train or combos of "Tram,Bus"
-    # LineNos = 31 or 17 or "31,17"
 
-    # https://reisapi.ruter.no/StopVisit/GetDepartures/3010533?transporttypes=Bus&linenames=31
-    # https://reisapi.ruter.no/StopVisit/GetDepartures/3010533?transporttypes=Tram&linenames=17
-    # We want direction = 2 for both I believe
     grabbedDict = defaultdict(list)
     
     url = "http://reisapi.ruter.no/StopVisit/GetDepartures/" + str(stopID)
     url = url + "?transporttypes=" + vehicleTypes   
     url = url + "&linenames=" + lineNos
 
-	# url = "http://reis.trafikanten.no/reisrest/realtime/getrealtimedata/" + str(stopID)
     urlRequest = urllib.request.urlopen(url)
     urlData = json.loads(urlRequest.read().decode())
     
@@ -65,7 +63,6 @@ def timeGrabber(stopID, vehicleTypes, lineNos, direction):
         i += 1
     return grabbedDict
 
-# lcdbackpack.disconnect() should be used as emergency break 
 def mainloop():
     # Start threading self destruct
     # t = threading.Timer(15, mainloop)
@@ -73,9 +70,9 @@ def mainloop():
     
     ## Set current time
     current = datetime.now(timezone.utc)
+
     ## Assign trains to track for each line
     # Gather headways for Sofienberg (SWITCH OUT FOR GENERIC CONST) 
-
     headways = timeGrabber(3010533,"Bus,Tram","31,17",2)
 
     if (debug): 
@@ -99,9 +96,6 @@ def mainloop():
         topcombo = "17:   n/a"   
 
     print(topcombo)
-
-	## Cast as bytes
-    #topcombob = topcombo.encode()
     lcdscreen.clear()
     lcdscreen.write(topcombo)
 
