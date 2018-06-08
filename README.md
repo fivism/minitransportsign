@@ -11,3 +11,8 @@ This project consists of two files:
 - the departure-grabbing software (most of which is serial-formatting cruft) 
 
 Together these are deployed on an RPi connected to a character display (in this case 16x2) to display the next two real time Oslo bus or tram departures. It updates itself every fifteen seconds.
+NOTE: Relies on the community-made lcdbackpack library, an easier-to-use library of functions for the i2c/usb adafruit backpack.
+
+TODO:
+- [ ] Further abstraction for selected lines and directions
+- [X] Upgrade to python3
