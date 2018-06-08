@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 ##
 ## Two line sign that shows two departures for two lines simultaneously 
 ## and outputs specifically to a 16x2 character display.
@@ -9,10 +9,6 @@
 ## Vehicle = Metro/Tram/Bus/Train or combos of "Tram,Bus"    
 ## LineNos = 31 or 17 or "31,17"
 
-import json
-import os
-import glob
-import sys
 from lcdbackpack import LcdBackpack
 import urllib.request
 from collections import defaultdict
@@ -21,7 +17,6 @@ import time
 from datetime import datetime, timezone 
 import dateutil.relativedelta
 from dateutil.parser import parse
-import threading
 from time import sleep
 
 # timeGrabber used once per update, calls all applicable for one stop  
@@ -72,7 +67,6 @@ def mainloop():
     current = datetime.now(timezone.utc)
 
     ## Assign trains to track for each line
-    # Gather headways for Sofienberg (SWITCH OUT FOR GENERIC CONST) 
     headways = timeGrabber(3010533,"Bus,Tram","31,17",2)
 
     if (debug): 
