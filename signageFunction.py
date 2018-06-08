@@ -12,8 +12,9 @@
 from lcdbackpack import LcdBackpack
 import urllib.request
 from collections import defaultdict
-import urllib.error
+from urllib.error import URLError
 import time
+import json 
 from datetime import datetime, timezone 
 import dateutil.relativedelta
 from dateutil.parser import parse
@@ -29,7 +30,7 @@ debug = False
 lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
 lcdscreen.connect()
 lcdscreen.clear()
-lcdscreen.write("tramtimer v.02") 
+lcdscreen.write("tramtimer v.03") 
 
 # Prints diagnostic data about the information taken for 17/31
 def dataDebug(extract):
@@ -63,43 +64,52 @@ def mainloop():
     current = datetime.now(timezone.utc)
 
     ## Assign trains to track for each line
-    headways = timeGrabber(3010533,"Bus,Tram","31,17",2)
-
+    try:
+        headways = timeGrabber(3010533,"Bus,Tram","31,17",2)
+    except URLError as e:
+        if hasattr(e, 'reason'):
+            print("Failed to reach server.")
+            print("Reason: ", e.reason)
+        elif hasattr(e, 'code'):
+            print("The server could not fill request.")
+            print("Error code: ", e.code)
+    else: 
+    
     if (debug): 
         dataDebug(headways)
 
     top = headways['17'] 
     bottom = headways['31']
 
-## Write "top" list
-    
+    ## Write "top" list
     if len(top) == 0: 
         topcombo = "17:   n/a"
     if len(top) > 0:
         toptuple = dateutil.relativedelta.relativedelta(top[0], current) 
-        topcombo = "17: " + str(top1tuple.minutes) + 'm '
+        topcombo = "17: " + str(toptuple.minutes) + 'm '
     if len(top) > 1:
         toptuple = dateutil.relativedelta.relativedelta(top[1], current)
-        topcombo += str(top2tuple.minutes) + 'm '
+        topcombo += str(toptuple.minutes) + 'm '
     if len(top) > 2:
         toptuple = dateutil.relativedelta.relativedelta(top[2], current)
-        topcombo += str(top2tuple.minutes) + 'm'
+        topcombo += str(toptuple.minutes) + 'm'
 
     print(topcombo)
     lcdscreen.clear()
     lcdscreen.write(topcombo)
 
+    ## Write 'bottom' list
     if len(bottom) == 0:
         bottomcombo = "31:   n/a"
-    elif len(bottom) == 1:
-        bottom1tuple = dateutil.relativedelta.relativedelta(bottom[0], current) 
-        bottomcombo = "31: " + str(bottom1tuple.minutes) + 'm'
-    elif len(bottom) > 1: 
-        bottom1tuple = dateutil.relativedelta.relativedelta(bottom[0], current) 
-        bottom2tuple = dateutil.relativedelta.relativedelta(bottom[1], current)
-        bottomcombo = "31: " + str(bottom1tuple.minutes) + 'm ' + str(bottom2tuple.minutes) + 'm'
-    else:
-        bottomcombo = "31:   n/a"  
+    if len(bottom) > 0:
+        bottomtuple = dateutil.relativedelta.relativedelta(bottom[0], current) 
+        bottomcombo = "31: " + str(bottomtuple.minutes) + 'm '
+    if len(bottom) > 1: 
+        bottomtuple = dateutil.relativedelta.relativedelta(bottom[1], current)
+        bottomcombo += str(bottomtuple.minutes) + 'm '
+    if len(bottom) > 2:
+        bottomtuple = dateutil.relativedelta.relativedelta(bottom[2], current)
+        bottomcombo += str(bottomtuple.minutes) + 'm'
 
     print(bottomcombo)
     lcdscreen.set_cursor_position(1, 2)
