@@ -24,12 +24,21 @@ from time import sleep
 
 MVJ = 'MonitoredVehicleJourney'
 EAT = 'ExpectedArrivalTime'
-# Prints diagnostic data about the information taken 
+debug = False
+
+lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
+lcdscreen.connect()
+lcdscreen.clear()
+lcdscreen.write("tramtimer v.02") 
+
+# Prints diagnostic data about the information taken for 17/31
 def dataDebug(extract):
     print("URLDATA LENGTH " + str(len(extract)))
-    print("First Entry:")
-    print(extract[0][MVJ]['DirectionRef'])
-    print(extract[0][MVJ]['MonitoredCall'][EAT])
+    print("Headways dict entries for")
+    print("17:")
+    print(extract['17'])
+    print("31:")
+    print(extract['31'])
 
 def timeGrabber(stopID, vehicleTypes, lineNos, direction):
     # Sofienberg = 3010533 
@@ -49,44 +58,29 @@ def timeGrabber(stopID, vehicleTypes, lineNos, direction):
     urlRequest = urllib.request.urlopen(url)
     urlData = json.loads(urlRequest.read().decode())
     
-    # Diagnostics 
-    dataDebug(urlData)
-
     i = 0
     while i < len(urlData):    
         if (urlData[i][MVJ]['DirectionRef'] == str(2)):
             grabbedDict[urlData[i][MVJ]['LineRef']].append(parse(urlData[i][MVJ]['MonitoredCall'][EAT]))
         i += 1
     return grabbedDict
-    
-    #while i < len(urlData):
-    #    if (urlData[i]['DirectionRef'] == str(direction)):
-    #        grabbedList.append(urlData[i]['ExpectedArrivalTime'])
-    #    i = i + 1
-    #return grabbedList
-
 
 # lcdbackpack.disconnect() should be used as emergency break 
 def mainloop():
     # Start threading self destruct
     # t = threading.Timer(15, mainloop)
     # t.start()
-    lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
-    lcdscreen.connect()
-    lcdscreen.clear()
-    lcdscreen.write("tramtimer v.01") 
     
     ## Set current time
     current = datetime.now(timezone.utc)
-## Assign trains to track for each line
+    ## Assign trains to track for each line
     # Gather headways for Sofienberg (SWITCH OUT FOR GENERIC CONST) 
 
     headways = timeGrabber(3010533,"Bus,Tram","31,17",2)
-    print("Headways dict entries for")
-    print("17:")
-    print(headways['17'])
-    print("31:")
-    print(headways['31'])
+
+    if (debug): 
+        dataDebug(headways)
+
     top = headways['17'] 
     bottom = headways['31']
 
@@ -127,6 +121,7 @@ def mainloop():
     lcdscreen.set_cursor_position(1, 2)
     lcdscreen.write(bottomcombo)
 
-    time.sleep(15)
+    time.sleep(20)
 
-mainloop()
+while True:
+    mainloop()
