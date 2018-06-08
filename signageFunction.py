@@ -13,7 +13,7 @@ from collections import defaultdict
 #from urllib2 import urlopen
 import urllib.error
 import time
-import datetime 
+from datetime import datetime, timezone 
 import dateutil.relativedelta
 from dateutil.parser import parse
 import threading
@@ -77,8 +77,7 @@ def mainloop():
     lcdscreen.write("tramtimer v.01") 
     
     ## Set current time
-    current = datetime.datetime.fromtimestamp(int(time.time())) 
-
+    current = datetime.now(timezone.utc)
 ## Assign trains to track for each line
     # Gather headways for Sofienberg (SWITCH OUT FOR GENERIC CONST) 
 
@@ -96,47 +95,37 @@ def mainloop():
     if len(top) == 0: 
         topcombo = "17:   n/a"
     elif len(top) == 1:
-        top1 = datetime.datetime.fromtimestamp(int(top[0][6:16]))
-        top1tuple = dateutil.relativedelta.relativedelta (top1, current) 
+        top1tuple = dateutil.relativedelta.relativedelta(top[0], current) 
         topcombo = "17: " + str(top1tuple.minutes) + 'm'
     elif len(top) > 1:
-        top1 = datetime.datetime.fromtimestamp(int(top[0][6:16]))
-        top1tuple = dateutil.relativedelta.relativedelta (top1, current) 
-        top2 = datetime.datetime.fromtimestamp(int(top[1][6:16]))
-        top2tuple = dateutil.relativedelta.relativedelta (top2, current)
+        top1tuple = dateutil.relativedelta.relativedelta (top[0], current) 
+        top2tuple = dateutil.relativedelta.relativedelta (top[1], current)
         topcombo = "17: " + str(top1tuple.minutes) + 'm ' + str(top2tuple.minutes) + 'm'
     else:
         topcombo = "17:   n/a"   
 
-	## Cast as bytes
-    topcombob = topcombo.encode()
+    print(topcombo)
 
-    lcdscreen.write(b'\xFE')
-    lcdscreen.write(b'\x58')
-    lcdscreen.write(topcombob)
+	## Cast as bytes
+    #topcombob = topcombo.encode()
+    lcdscreen.clear()
+    lcdscreen.write(topcombo)
 
     if len(bottom) == 0:
         bottomcombo = "31:   n/a"
     elif len(bottom) == 1:
-        bottom1 = datetime.datetime.fromtimestamp(int(bottom[0][6:16]))
-        bottom1tuple = dateutil.relativedelta.relativedelta (bottom1, current) 
+        bottom1tuple = dateutil.relativedelta.relativedelta(bottom[0], current) 
         bottomcombo = "31: " + str(bottom1tuple.minutes) + 'm'
     elif len(bottom) > 1: 
-        bottom1 = datetime.datetime.fromtimestamp(int(bottom[0][6:16]))
-        bottom1tuple = dateutil.relativedelta.relativedelta (bottom1, current) 
-        bottom2 = datetime.datetime.fromtimestamp(int(bottom[1][6:16]))
-        bottom2tuple = dateutil.relativedelta.relativedelta (bottom2, current)
+        bottom1tuple = dateutil.relativedelta.relativedelta(bottom[0], current) 
+        bottom2tuple = dateutil.relativedelta.relativedelta(bottom[1], current)
         bottomcombo = "31: " + str(bottom1tuple.minutes) + 'm ' + str(bottom2tuple.minutes) + 'm'
     else:
         bottomcombo = "31:   n/a"  
 
-    bottomcombob = bottomcombo.encode()
-
-    lcdscreen.write(b'\xFE')
-    lcdscreen.write(b'\x47')
-    lcdscreen.write(b'\x01')
-    lcdscreen.write(b'\x02')
-    lcdscreen.write(bottomcombob)
+    print(bottomcombo)
+    lcdscreen.set_cursor_position(1, 2)
+    lcdscreen.write(bottomcombo)
 
     time.sleep(15)
 
