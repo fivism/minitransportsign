@@ -74,48 +74,47 @@ def mainloop():
             print("The server could not fill request.")
             print("Error code: ", e.code)
     else: 
-    
-    if (debug): 
-        dataDebug(headways)
+        if (debug): 
+            dataDebug(headways)
 
-    top = headways['17'] 
-    bottom = headways['31']
+        top = headways['17'] 
+        bottom = headways['31']
 
-    ## Write "top" list
-    if len(top) == 0: 
-        topcombo = "17:   n/a"
-    if len(top) > 0:
-        toptuple = dateutil.relativedelta.relativedelta(top[0], current) 
-        topcombo = "17: " + str(toptuple.minutes) + 'm '
-    if len(top) > 1:
-        toptuple = dateutil.relativedelta.relativedelta(top[1], current)
-        topcombo += str(toptuple.minutes) + 'm '
-    if len(top) > 2:
-        toptuple = dateutil.relativedelta.relativedelta(top[2], current)
-        topcombo += str(toptuple.minutes) + 'm'
+        ## Write "top" list
+        if len(top) == 0: 
+            topcombo = "17:   n/a"
+        if len(top) > 0:
+            toptuple = dateutil.relativedelta.relativedelta(top[0], current) 
+            topcombo = "17: " + str(toptuple.minutes) + 'm '
+        if len(top) > 1:
+            toptuple = dateutil.relativedelta.relativedelta(top[1], current)
+            topcombo += str(toptuple.minutes) + 'm '
+        if len(top) > 2:
+            toptuple = dateutil.relativedelta.relativedelta(top[2], current)
+            topcombo += str(toptuple.minutes) + 'm'
 
-    print(topcombo)
-    lcdscreen.clear()
-    lcdscreen.write(topcombo)
+        print(topcombo)
+        lcdscreen.clear()
+        lcdscreen.write(topcombo)
 
-    ## Write 'bottom' list
-    if len(bottom) == 0:
-        bottomcombo = "31:   n/a"
-    if len(bottom) > 0:
-        bottomtuple = dateutil.relativedelta.relativedelta(bottom[0], current) 
-        bottomcombo = "31: " + str(bottomtuple.minutes) + 'm '
-    if len(bottom) > 1: 
-        bottomtuple = dateutil.relativedelta.relativedelta(bottom[1], current)
-        bottomcombo += str(bottomtuple.minutes) + 'm '
-    if len(bottom) > 2:
-        bottomtuple = dateutil.relativedelta.relativedelta(bottom[2], current)
-        bottomcombo += str(bottomtuple.minutes) + 'm'
+        ## Write 'bottom' list
+        if len(bottom) == 0:
+            bottomcombo = "31:   n/a"
+        if len(bottom) > 0:
+            bottomtuple = dateutil.relativedelta.relativedelta(bottom[0], current) 
+            bottomcombo = "31: " + str(bottomtuple.minutes) + 'm '
+        if len(bottom) > 1: 
+            bottomtuple = dateutil.relativedelta.relativedelta(bottom[1], current)
+            bottomcombo += str(bottomtuple.minutes) + 'm '
+        if len(bottom) > 2:
+            bottomtuple = dateutil.relativedelta.relativedelta(bottom[2], current)
+            bottomcombo += str(bottomtuple.minutes) + 'm'
 
-    print(bottomcombo)
-    lcdscreen.set_cursor_position(1, 2)
-    lcdscreen.write(bottomcombo)
+        print(bottomcombo)
+        lcdscreen.set_cursor_position(1, 2)
+        lcdscreen.write(bottomcombo)
 
-    time.sleep(20)
+        time.sleep(20)
 
 while True:
     mainloop()
