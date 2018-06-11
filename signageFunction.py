@@ -79,6 +79,12 @@ def mainloop():
             lcdscreen.clear()
             lcdscreen.write("ERR: ", e.code)
             time.sleep(10)
+    except ConnectionResetError as e:
+            print("CAUGHT ConnectionResetError")
+            # print("Code: ", e.code) CRE's have no attr 'code' 
+            lcdscreen.clear()
+            lcdscreen.write("ConnResetError")
+            time.sleep(10)
     else: 
         if (debug): 
             dataDebug(headways)
