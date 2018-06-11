@@ -1,4 +1,3 @@
 #!/bin/sh
-python scrape.2.py
-
-python signage.2.py
+sleep 10
+python3 signageFunction.py
