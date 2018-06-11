@@ -1,0 +1,289 @@
++ python3 /home/pi/code/minitransportsign/signageFunction.py
++ hostname -I
++ _IP=
++ [  ]
++ exit 0
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno -2] Name or service not known
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Failed to reach server.
+Reason:  [Errno 104] Connection reset by peer
+Traceback (most recent call last):
+  File "/home/pi/code/minitransportsign/signageFunction.py", line 129, in <module>
+    mainloop()
+  File "/home/pi/code/minitransportsign/signageFunction.py", line 68, in mainloop
+    headways = timeGrabber(3010533,"Bus,Tram","31,17",2)
+  File "/home/pi/code/minitransportsign/signageFunction.py", line 52, in timeGrabber
+    urlRequest = urllib.request.urlopen(url)
+  File "/usr/lib/python3.4/urllib/request.py", line 153, in urlopen
+    return opener.open(url, data, timeout)
+  File "/usr/lib/python3.4/urllib/request.py", line 455, in open
+    response = self._open(req, data)
+  File "/usr/lib/python3.4/urllib/request.py", line 473, in _open
+    '_open', req)
+  File "/usr/lib/python3.4/urllib/request.py", line 433, in _call_chain
+    result = func(*args)
+  File "/usr/lib/python3.4/urllib/request.py", line 1202, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/usr/lib/python3.4/urllib/request.py", line 1177, in do_open
+    r = h.getresponse()
+  File "/usr/lib/python3.4/http/client.py", line 1172, in getresponse
+    response.begin()
+  File "/usr/lib/python3.4/http/client.py", line 351, in begin
+    version, status, reason = self._read_status()
+  File "/usr/lib/python3.4/http/client.py", line 313, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/usr/lib/python3.4/socket.py", line 371, in readinto
+    return self._sock.recv_into(b)
+ConnectionResetError: [Errno 104] Connection reset by peer
