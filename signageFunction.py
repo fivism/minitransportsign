@@ -99,7 +99,9 @@ def mainloop():
             toptuple = dateutil.relativedelta.relativedelta(top[2], current)
             topcombo += str(toptuple.minutes) + 'm'
 
-        print(topcombo)
+        if (debug):
+            print(topcombo)
+        
         lcdscreen.clear()
         lcdscreen.write(topcombo)
 
@@ -116,7 +118,8 @@ def mainloop():
             bottomtuple = dateutil.relativedelta.relativedelta(bottom[2], current)
             bottomcombo += str(bottomtuple.minutes) + 'm'
 
-        print(bottomcombo)
+        if (debug):
+            print(bottomcombo)
         lcdscreen.set_cursor_position(1, 2)
         lcdscreen.write(bottomcombo)
 
