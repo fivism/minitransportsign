@@ -85,6 +85,12 @@ def mainloop():
             lcdscreen.clear()
             lcdscreen.write("ConnResetError")
             time.sleep(10)
+    except ValueError as e:
+            print("VALUE ERROR")
+            lcdscreen.clear()
+            lcdscreen.write("VALERROR")
+            time.sleep(10)
+
     else: 
         if (debug): 
             dataDebug(headways)
