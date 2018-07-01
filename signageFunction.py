@@ -13,12 +13,14 @@ from lcdbackpack import LcdBackpack
 import urllib.request
 from collections import defaultdict
 from urllib.error import URLError
+from urllib.error import HTTPError
 import time
 import json
 from datetime import datetime, timezone
 import dateutil.relativedelta
 from dateutil.parser import parse
 from time import sleep
+import sys
 
 # timeGrabber used once per update, calls all applicable for one stop
 # One stopID and multiple vehicles and line numbers possible
@@ -78,12 +80,12 @@ def mainloop():
             lcdscreen.clear()
             lcdscreen.write("NO CONNECT")
             time.sleep(10)
-        elif hasattr(e, 'code'):
-            print("The server could not fill request.")
-            print("Error code: ", e.code)
-            lcdscreen.clear()
-            lcdscreen.write("ERR: ", e.code)
-            time.sleep(10)
+    except HTTPError, e:
+        print("The server could not fill request.")
+        print("HTTP errorno: ", e.code)
+        lcdscreen.clear()
+        lcdscreen.write("HTTPERR:", e.code)
+        time.sleep(10)
     except ConnectionResetError as e:
         print("CAUGHT ConnectionResetError")
         # print("Code: ", e.code) CRE's have no attr 'code'
@@ -91,7 +93,7 @@ def mainloop():
         lcdscreen.write("ConnResetError")
         time.sleep(10)
     except ValueError as e:
-        print("VALUE ERROR")
+        print("VALUE ERROR:", e)
         lcdscreen.clear()
         lcdscreen.write("VALERROR")
         time.sleep(10)
