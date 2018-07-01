@@ -80,7 +80,7 @@ def mainloop():
             lcdscreen.clear()
             lcdscreen.write("NO CONNECT")
             time.sleep(10)
-    except HTTPError, e:
+    except HTTPError as e:
         print("The server could not fill request.")
         print("HTTP errorno: ", e.code)
         lcdscreen.clear()
