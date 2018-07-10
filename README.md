@@ -14,5 +14,6 @@ Together these are deployed on an RPi connected to a character display (in this 
 NOTE: Relies on the community-made lcdbackpack library, an easier-to-use library of functions for the i2c/usb adafruit backpack.
 
 TODO:
+- [ ] migration to entur API
 - [ ] Further abstraction for selected lines and directions
 - [X] Upgrade to python3
