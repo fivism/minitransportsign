@@ -1,5 +1,6 @@
 # minitransportsign
-![Transit sign with downtown tram 17 and bus 31 and next three departures for each](example.jpg)
+![Transit sign with downtown tram 17 and bus 31 and next three departures for each](example.jpg "example of output")
+
 Micro python signage 'player' for a 16x2 transit arrival times sign (currently for 
 Norwegian transit only)
 
