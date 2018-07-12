@@ -8,7 +8,7 @@ This project requires:
 - A Raspberry Pi or any other computer assigned to the sign
 - A 16x2 character display  
 
-NOTE: Relies on the community-made lcdbackpack library, an easier-to-use library of functions for the i2c/usb adafruit backpack.
+NOTE: Relies on the community-made lcdbackpack library, an easier-to-use library of functions for the [i2c/usb adafruit backpack](https://www.adafruit.com/product/782).
 
 ## Installation: 
 
