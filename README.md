@@ -1,20 +1,15 @@
 # minitransportsign
-Micro 'player' for a 16x2 transit arrival times sign
+![Transit sign with downtown tram 17 and bus 31 and next three departures for each](example.jpg)
+Micro python signage 'player' for a 16x2 transit arrival times sign (currently for 
+Norwegian transit only)
 
 This project requires:
-- lcdbackpack (from pypi repo) for simplified 16x2 char display comms over the
-adafruit USB/i2c backpack
-
-This project consists of two files: 
-
-- an init script that is meant to be an at-boot toggle for the python code
-- the departure-grabbing software (most of which is serial-formatting cruft) 
-
-Together these are deployed on an RPi connected to a character display (in this case 16x2) to display the next two real time Oslo bus or tram departures. It updates itself every fifteen seconds.
+- A Raspberry Pi or any other computer assigned to the sign
+- A 16x2 character display  
 
 NOTE: Relies on the community-made lcdbackpack library, an easier-to-use library of functions for the i2c/usb adafruit backpack.
 
-Installation: 
+## Installation: 
 
 1. Download minitransportsign
 2. Install dependencies (listed in requirements.txt)
@@ -25,7 +20,7 @@ Installation:
 python3 /home/pi/code/minitransportsign/signageFunction.py &
 ```
 
-TODO:
+## TODO:
 - [ ] migration to entur API
 - [ ] Further abstraction for selected lines and directions
 - [X] Upgrade to python3
