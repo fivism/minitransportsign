@@ -45,7 +45,11 @@ def dataDebug(extract):
     print("31:")
     print(extract['31'])
 
-
+# TODO now we're going to implement entur API instead of using 
+# old reisAPI urls and keys and stationIDs
+# [ ] find Sofienberg station ID
+# [ ] get a usable timetuple out of it
+# [ ] merge back
 def timeGrabber(stopID, vehicleTypes, lineNos, direction):
 
     grabbedDict = defaultdict(list)
