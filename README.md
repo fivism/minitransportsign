@@ -18,10 +18,10 @@ NOTE: Relies on the community-made lcdbackpack library, an easier-to-use library
 4. Select station ID to point to
 5. Run on RPI at boot with an entry at `/etc/rc.local`: 
 ```
-python3 /home/pi/code/minitransportsign/signageFunction.py &
+python3 /path/to/signageFunction.py &
 ```
 
 ## TODO:
-- [ ] migration to entur API
+- [ ] migration to entur API (new branch)
 - [ ] Further abstraction for selected lines and directions
 - [X] Upgrade to python3
