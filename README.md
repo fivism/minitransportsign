@@ -22,6 +22,6 @@ python3 /path/to/signageFunction.py &
 ```
 
 ## TODO:
-- [ ] migration to entur API (new branch, using this [translation guide](https://rutebanken.atlassian.net/wiki/spaces/PUBLIC/pages/319586310/Migrering+reises+k+API+1.1+-+2.0)
+- [x] migration to entur API (new branch, using this [translation guide](https://rutebanken.atlassian.net/wiki/spaces/PUBLIC/pages/319586310/Migrering+reises+k+API+1.1+-+2.0)
 - [ ] Further abstraction for selected lines and directions
 - [X] Upgrade to python3
