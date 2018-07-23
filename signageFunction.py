@@ -9,7 +9,6 @@
 # Vehicle = Metro/Tram/Bus/Train or combos of "Tram,Bus"
 ## LineNos = 31 or 17 or "31,17"
 
-from lcdbackpack import LcdBackpack
 import urllib.request
 from collections import defaultdict
 from urllib.error import URLError
@@ -21,54 +20,102 @@ import dateutil.relativedelta
 from dateutil.parser import parse
 from time import sleep
 import sys
+import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
-# timeGrabber used once per update, calls all applicable for one stop
-# One stopID and multiple vehicles and line numbers possible
-# A couple shortened keys to keep it simple
-MVJ = 'MonitoredVehicleJourney'
-EAT = 'ExpectedArrivalTime'
-debug = False
+LCD_ON = True  # for testing with/without serial LCD connection
+DEBUG = False    # set extra output on
 
-lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
-lcdscreen.connect()
-lcdscreen.clear()
-lcdscreen.write("tramtimer v.03")
+# Set required request header for Entur
+headers = {'ET-Client-Name': 'fivism-avgangskilt'}
+api_url = 'https://api.entur.org/journeyplanner/2.0/index/graphql'
 
-# Prints diagnostic data about the information taken for 17/31
+# Station and quays to seek
+STATION_ID = 'NSR:StopPlace:58190'  #TODO use as constant
+QUAY_1 = 'NSR:Quay:104048'
+QUAY_2 = 'NSR:Quay:11882'
 
+# Transit lines to display
+LINE_1 = 'RUT:Line:17'
+LINE_2 = 'RUT:Line:31'
+
+if LCD_ON:
+    from lcdbackpack import LcdBackpack
+    lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
+    lcdscreen.connect()
+    lcdscreen.clear()
+    lcdscreen.write("tramtimer v.03")
+
+"""
+Query formed for Sofienberg (on Trondheimsveien)
+"""
+sofberg_query = """
+{
+  stopPlace(id: "NSR:StopPlace:58190") {
+    id
+    name
+    estimatedCalls(timeRange: 72100, numberOfDepartures: 20) {
+      realtime
+      aimedArrivalTime
+      aimedDepartureTime
+      expectedArrivalTime
+      expectedDepartureTime
+      actualArrivalTime
+      actualDepartureTime
+      date
+      forBoarding
+      forAlighting
+      destinationDisplay {
+        frontText
+      }
+      quay {
+        id
+      }
+      serviceJourney {
+        journeyPattern {
+          line {
+            id
+            name
+            transportMode
+          }
+          directionType
+        }
+      }
+    }
+  }
+}
+"""
+
+def fetch_query(query):
+    request = requests.post(api_url, json={'query': query}, headers=headers)
+    if request.status_code == 200:
+        return request.json()
+    else:
+        raise Exception("Query failed, received code: {}. {}".format(request.status_code, query))
+
+
+def timeGrabber():
+    """Collect departure times for given Entur quays.
+    Takes two NSR quay numbers as strings as well as
+    transitline ID (in format 'RUT:Line:31')
+    """
+    grabbedDict = defaultdict(list) # creates empty dict keyed to line number ('17' or '31')
+    results = fetch_query(sofberg_query)
+    all_departures = results['data']['stopPlace']['estimatedCalls']
+
+    i = 0
+    for headway in all_departures:
+        if (headway['quay']['id'] == QUAY_1 or QUAY_2):
+            grabbedDict[headway['serviceJourney']['journeyPattern']['line']['id']].append(
+                parse(headway['expectedArrivalTime']))
+    return grabbedDict
 
 def dataDebug(extract):
     print("URLDATA LENGTH " + str(len(extract)))
     print("Headways dict entries for")
     print("17:")
-    print(extract['17'])
+    print(extract[LINE_1])
     print("31:")
-    print(extract['31'])
-
-# TODO now we're going to implement entur API instead of using 
-# old reisAPI urls and keys and stationIDs
-# [x] find Sofienberg station ID
-# [ ] get a usable timetuple out of it
-# [ ] merge back
-def timeGrabber(stopID, vehicleTypes, lineNos, direction):
-
-    grabbedDict = defaultdict(list)
-
-    url = "http://reisapi.ruter.no/StopVisit/GetDepartures/" + str(stopID)
-    url = url + "?transporttypes=" + vehicleTypes
-    url = url + "&linenames=" + lineNos
-
-    urlRequest = urllib.request.urlopen(url)
-    urlData = json.loads(urlRequest.read().decode())
-
-    i = 0
-    while i < len(urlData):
-        if (urlData[i][MVJ]['DirectionRef'] == str(2)):
-            grabbedDict[urlData[i][MVJ]['LineRef']].append(
-                parse(urlData[i][MVJ]['MonitoredCall'][EAT]))
-        i += 1
-    return grabbedDict
-
+    print(extract[LINE_2])
 
 def mainloop():
     # Set current time
@@ -76,41 +123,45 @@ def mainloop():
 
     # Assign trains to track for each line
     try:
-        headways = timeGrabber(3010533, "Bus,Tram", "31,17", 2)
+        headways = timeGrabber()
     except URLError as e:
         if hasattr(e, 'reason'):
             print("Failed to reach server.")
             print("Reason: ", e.reason)
-            lcdscreen.clear()
-            lcdscreen.write("NO CONNECT")
+            if LCD_ON:
+                lcdscreen.clear()
+                lcdscreen.write("NO CONNECT")
             time.sleep(10)
     except HTTPError as e:
         print("The server could not fill request.")
         print("HTTP errorno: ", e.code)
-        lcdscreen.clear()
-        lcdscreen.write("HTTPERR:", e.code)
+        if LCD_ON:
+            lcdscreen.clear()
+            lcdscreen.write("HTTPERR:", e.code)
         time.sleep(10)
     except ConnectionResetError as e:
         print("CAUGHT ConnectionResetError")
-        # print("Code: ", e.code) CRE's have no attr 'code'
-        lcdscreen.clear()
-        lcdscreen.write("ConnResetError")
+
+        if LCD_ON:
+            lcdscreen.clear()
+            lcdscreen.write("ConnResetError")
         time.sleep(10)
     except ValueError as e:
         print("VALUE ERROR:", e)
-        lcdscreen.clear()
-        lcdscreen.write("VALERROR")
+        if LCD_ON:
+            lcdscreen.clear()
+            lcdscreen.write("VALERROR")
         time.sleep(10)
     except:
         print("UNEXPECTED ERROR:", sys.exc_info()[0])
         raise
 
     else:
-        if debug:
+        if DEBUG:
             dataDebug(headways)
 
-        top = headways['17']
-        bottom = headways['31']
+        top = headways[LINE_1]
+        bottom = headways[LINE_2]
 
         # Write "top" list
         if len(top) == 0:
@@ -125,11 +176,12 @@ def mainloop():
             toptuple = dateutil.relativedelta.relativedelta(top[2], current)
             topcombo += str(toptuple.minutes) + 'm'
 
-        if debug:
+        if DEBUG:
             print(topcombo)
 
-        lcdscreen.clear()
-        lcdscreen.write(topcombo)
+        if LCD_ON:
+            lcdscreen.clear()
+            lcdscreen.write(topcombo)
 
         # Write 'bottom' list
         if len(bottom) == 0:
@@ -147,10 +199,12 @@ def mainloop():
                 bottom[2], current)
             bottomcombo += str(bottomtuple.minutes) + 'm'
 
-        if debug:
+        if DEBUG:
             print(bottomcombo)
-        lcdscreen.set_cursor_position(1, 2)
-        lcdscreen.write(bottomcombo)
+
+        if LCD_ON:
+            lcdscreen.set_cursor_position(1, 2)
+            lcdscreen.write(bottomcombo)
 
         time.sleep(20)
 
