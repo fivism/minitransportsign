@@ -27,6 +27,7 @@ import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366a
 # A couple shortened keys to keep it simple
 lcd_on = False  # for testing with/without serial LCD connection
 debug = True    # set extra output on
+
 # Set required request header for Entur
 headers = {'ET-Client-Name': 'fivism-av`gangskilt'}
 
@@ -41,9 +42,6 @@ if lcd_on:
     lcdscreen.connect()
     lcdscreen.clear()
     lcdscreen.write("tramtimer v.03")
-
-# Prints diagnostic data about the information taken for 17/31
-
 
 def dataDebug(extract):
     print("URLDATA LENGTH " + str(len(extract)))
@@ -108,8 +106,8 @@ def fetch_query(query):
     else:
         raise Exception("Query failed, received code: {}. {}".format(request.status_code, query))
 
-
-def timeGrabberTemp(query, quay1, quay2):
+def
+def timeGrabberTemp(query_json):
     """Collect departure times for given Entur quays.
     Takes two NSR quay numbers as strings as well as
     transitline ID (in format 'RUT:Line:31')
@@ -148,25 +146,29 @@ def mainloop():
         if hasattr(e, 'reason'):
             print("Failed to reach server.")
             print("Reason: ", e.reason)
-            lcdscreen.clear()
-            lcdscreen.write("NO CONNECT")
+            if lcd_on:
+                lcdscreen.clear()
+                lcdscreen.write("NO CONNECT")
             time.sleep(10)
     except HTTPError as e:
         print("The server could not fill request.")
         print("HTTP errorno: ", e.code)
-        lcdscreen.clear()
-        lcdscreen.write("HTTPERR:", e.code)
+        if lcd_on:
+            lcdscreen.clear()
+            lcdscreen.write("HTTPERR:", e.code)
         time.sleep(10)
     except ConnectionResetError as e:
         print("CAUGHT ConnectionResetError")
         # print("Code: ", e.code) CRE's have no attr 'code'
-        lcdscreen.clear()
-        lcdscreen.write("ConnResetError")
+        if lcd_on:
+            lcdscreen.clear()
+            lcdscreen.write("ConnResetError")
         time.sleep(10)
     except ValueError as e:
         print("VALUE ERROR:", e)
-        lcdscreen.clear()
-        lcdscreen.write("VALERROR")
+        if lcd_on:
+            lcdscreen.clear()
+            lcdscreen.write("VALERROR")
         time.sleep(10)
     except:
         print("UNEXPECTED ERROR:", sys.exc_info()[0])
@@ -195,8 +197,9 @@ def mainloop():
         if debug:
             print(topcombo)
 
-        lcdscreen.clear()
-        lcdscreen.write(topcombo)
+        if lcd_on:
+            lcdscreen.clear()
+            lcdscreen.write(topcombo)
 
         # Write 'bottom' list
         if len(bottom) == 0:
@@ -216,8 +219,10 @@ def mainloop():
 
         if debug:
             print(bottomcombo)
-        lcdscreen.set_cursor_position(1, 2)
-        lcdscreen.write(bottomcombo)
+
+        if lcd_on:
+            lcdscreen.set_cursor_position(1, 2)
+            lcdscreen.write(bottomcombo)
 
         time.sleep(20)
 
