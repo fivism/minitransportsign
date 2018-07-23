@@ -106,7 +106,7 @@ def mainloop():
         raise
 
     else:
-        if (debug):
+        if debug:
             dataDebug(headways)
 
         top = headways['17']
@@ -125,7 +125,7 @@ def mainloop():
             toptuple = dateutil.relativedelta.relativedelta(top[2], current)
             topcombo += str(toptuple.minutes) + 'm'
 
-        if (debug):
+        if debug:
             print(topcombo)
 
         lcdscreen.clear()
@@ -147,7 +147,7 @@ def mainloop():
                 bottom[2], current)
             bottomcombo += str(bottomtuple.minutes) + 'm'
 
-        if (debug):
+        if debug:
             print(bottomcombo)
         lcdscreen.set_cursor_position(1, 2)
         lcdscreen.write(bottomcombo)
