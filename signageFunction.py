@@ -25,7 +25,7 @@ import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366a
 # timeGrabber used once per update, calls all applicable for one stop
 # One stopID and multiple vehicles and line numbers possible
 # A couple shortened keys to keep it simple
-lcd_on = False  # for testing without serial LCD connection
+lcd_on = False  # for testing with/without serial LCD connection
 debug = True    # set extra output on
 # Set required request header for Entur
 headers = {'ET-Client-Name': 'fivism-av`gangskilt'}
@@ -35,10 +35,12 @@ api_url = 'https://api.entur.org/journeyplanner/2.0/index/graphql'
 MVJ = 'MonitoredVehicleJourney'
 EAT = 'ExpectedArrivalTime'
 
-lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
-lcdscreen.connect()
-lcdscreen.clear()
-lcdscreen.write("tramtimer v.03")
+if lcd_on:
+    from lcdbackpack import LcdBackpack
+    lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
+    lcdscreen.connect()
+    lcdscreen.clear()
+    lcdscreen.write("tramtimer v.03")
 
 # Prints diagnostic data about the information taken for 17/31
 
