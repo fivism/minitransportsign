@@ -27,7 +27,7 @@ import sys
 MVJ = 'MonitoredVehicleJourney'
 EAT = 'ExpectedArrivalTime'
 
-debug = False
+debug = True
 lcd_output = False
 
 if lcd_output:
@@ -51,8 +51,47 @@ def dataDebug(extract):
 # TODO now we're going to implement entur API instead of using
 # old reisAPI urls and keys and stationIDs
 # [x] find Sofienberg station ID
+# [ ] get quay IDs
 # [ ] get a usable timetuple out of it
 # [ ] merge back
+
+def fetch_query(query):
+    
+query = """
+{
+  stopPlace(id: "NSR:StopPlace:58190") {
+    id
+    name
+    estimatedCalls(timeRange: 72100, numberOfDepartures: 20) {
+      realtime
+      aimedArrivalTime
+      aimedDepartureTime
+      expectedArrivalTime
+      expectedDepartureTime
+      actualArrivalTime
+      actualDepartureTime
+      date
+      forBoarding
+      forAlighting
+      destinationDisplay {
+        frontText
+      }
+      quay {
+        id
+      }
+      serviceJourney {
+        journeyPattern {
+          line {
+            id
+            name
+            transportMode
+          }
+        }
+      }
+    }
+  }
+}
+"""
 
 def timeGrabber(stopID, vehicleTypes, lineNos, direction):
 
@@ -81,29 +120,34 @@ def mainloop():
     # Assign trains to track for each line
     try:
         headways = timeGrabber(3010533, "Bus,Tram", "31,17", 2)
+        print(query)
     except URLError as e:
         if hasattr(e, 'reason'):
             print("Failed to reach server.")
             print("Reason: ", e.reason)
-            lcdscreen.clear()
-            lcdscreen.write("NO CONNECT")
-            time.sleep(10)
+            if lcd_output:
+                lcdscreen.clear()
+                lcdscreen.write("NO CONNECT")
+                time.sleep(10)
     except HTTPError as e:
         print("The server could not fill request.")
         print("HTTP errorno: ", e.code)
-        lcdscreen.clear()
-        lcdscreen.write("HTTPERR:", e.code)
+        if lcd_output:
+            lcdscreen.clear()
+            lcdscreen.write("HTTPERR:", e.code)
         time.sleep(10)
     except ConnectionResetError as e:
         print("CAUGHT ConnectionResetError")
         # print("Code: ", e.code) CRE's have no attr 'code'
-        lcdscreen.clear()
-        lcdscreen.write("ConnResetError")
+        if lcd_output:
+            lcdscreen.clear()
+            lcdscreen.write("ConnResetError")
         time.sleep(10)
     except ValueError as e:
         print("VALUE ERROR:", e)
-        lcdscreen.clear()
-        lcdscreen.write("VALERROR")
+        if lcd_output:
+            lcdscreen.clear()
+            lcdscreen.write("VALERROR")
         time.sleep(10)
     except:
         print("UNEXPECTED ERROR:", sys.exc_info()[0])
@@ -132,8 +176,9 @@ def mainloop():
         if debug:
             print(topcombo)
 
-        lcdscreen.clear()
-        lcdscreen.write(topcombo)
+        if lcd_output:
+            lcdscreen.clear()
+            lcdscreen.write(topcombo)
 
         # Write 'bottom' list
         if len(bottom) == 0:
@@ -153,8 +198,10 @@ def mainloop():
 
         if debug:
             print(bottomcombo)
-        lcdscreen.set_cursor_position(1, 2)
-        lcdscreen.write(bottomcombo)
+
+        if lcd_output:
+            lcdscreen.set_cursor_position(1, 2)
+            lcdscreen.write(bottomcombo)
 
         time.sleep(20)
 
