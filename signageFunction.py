@@ -9,6 +9,7 @@
 # Vehicle = Metro/Tram/Bus/Train or combos of "Tram,Bus"
 ## LineNos = 31 or 17 or "31,17"
 
+from lcdbackpack import LcdBackpack
 import urllib.request
 from collections import defaultdict
 from urllib.error import URLError
@@ -20,21 +21,13 @@ import dateutil.relativedelta
 from dateutil.parser import parse
 from time import sleep
 import sys
-import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
 # timeGrabber used once per update, calls all applicable for one stop
 # One stopID and multiple vehicles and line numbers possible
 # A couple shortened keys to keep it simple
-lcd_on = False  # for testing without serial LCD connection
-debug = True    # set extra output on
-# Set required request header for Entur
-clientname = 'fivism-avgangskilt'
-headers = {'ET-Client-Name': 'fivism-av`gangskilt'}
-
-api_url = "https://api.entur.org/journeyplanner/2.0/index/graphql"
-
 MVJ = 'MonitoredVehicleJourney'
 EAT = 'ExpectedArrivalTime'
+debug = False
 
 lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
 lcdscreen.connect()
@@ -54,71 +47,13 @@ def dataDebug(extract):
 
 # TODO now we're going to implement entur API instead of using
 # old reisAPI urls and keys and stationIDs
-# [x] find Sofienberg station ID (NSR:StopPlace:58190)
-# [x] find correct quay IDs (NSR:Quay:104048) for 17, (NSR:Quay:11882) for 31
-# [ ] set API client header before request
+# [x] find Sofienberg station ID
 # [ ] get a usable timetuple out of it
 # [ ] merge back
-
-"""
-Query formed for Sofienberg (on Trondheimsveien)
-"""
-query = """
-{
-  stopPlace(id: "NSR:StopPlace:58190") {
-    id
-    name
-    estimatedCalls(timeRange: 72100, numberOfDepartures: 20) {
-      realtime
-      aimedArrivalTime
-      aimedDepartureTime
-      expectedArrivalTime
-      expectedDepartureTime
-      actualArrivalTime
-      actualDepartureTime
-      date
-      forBoarding
-      forAlighting
-      destinationDisplay {
-        frontText
-      }
-      quay {
-        id
-      }
-      serviceJourney {
-        journeyPattern {
-          line {
-            id
-            name
-            transportMode
-          }
-          directionType
-        }
-      }
-    }
-  }
-}
-"""
-
-def fetch_query(query):
-    request = requests.post(api_url, json={'query': query}, headers=headers)
-    if request.status_code == 200:
-        return request.json()
-    else:
-        raise Exception("Query failed, received code: {}. {}".format(request.status_code, query))
-
-
-def timeGrabberTemp(query, quay1, quay2):
-    """Collect departure times for given Entur quays.
-    Takes two NSR quay numbers as strings as well as
-    transitline ID (in format 'RUT:Line:31')
-    """
-    grabbedDict = defaultdict(list) # creates empty dict keyed to line number ('17' or '31')
-
-    return grabbedDict
-
 def timeGrabber(stopID, vehicleTypes, lineNos, direction):
+
     grabbedDict = defaultdict(list)
+
     url = "http://reisapi.ruter.no/StopVisit/GetDepartures/" + str(stopID)
     url = url + "?transporttypes=" + vehicleTypes
     url = url + "&linenames=" + lineNos
@@ -142,7 +77,6 @@ def mainloop():
     # Assign trains to track for each line
     try:
         headways = timeGrabber(3010533, "Bus,Tram", "31,17", 2)
-        print(fetch_query(query))
     except URLError as e:
         if hasattr(e, 'reason'):
             print("Failed to reach server.")
@@ -172,7 +106,7 @@ def mainloop():
         raise
 
     else:
-        if debug:
+        if (debug):
             dataDebug(headways)
 
         top = headways['17']
@@ -191,7 +125,7 @@ def mainloop():
             toptuple = dateutil.relativedelta.relativedelta(top[2], current)
             topcombo += str(toptuple.minutes) + 'm'
 
-        if debug:
+        if (debug):
             print(topcombo)
 
         lcdscreen.clear()
@@ -213,7 +147,7 @@ def mainloop():
                 bottom[2], current)
             bottomcombo += str(bottomtuple.minutes) + 'm'
 
-        if debug:
+        if (debug):
             print(bottomcombo)
         lcdscreen.set_cursor_position(1, 2)
         lcdscreen.write(bottomcombo)
