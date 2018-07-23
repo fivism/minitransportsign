@@ -9,7 +9,6 @@
 # Vehicle = Metro/Tram/Bus/Train or combos of "Tram,Bus"
 ## LineNos = 31 or 17 or "31,17"
 
-from lcdbackpack import LcdBackpack
 import urllib.request
 from collections import defaultdict
 from urllib.error import URLError
@@ -27,12 +26,16 @@ import sys
 # A couple shortened keys to keep it simple
 MVJ = 'MonitoredVehicleJourney'
 EAT = 'ExpectedArrivalTime'
-debug = False
 
-lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
-lcdscreen.connect()
-lcdscreen.clear()
-lcdscreen.write("tramtimer v.03")
+debug = False
+lcd_output = False
+
+if lcd_output:
+    from lcdbackpack import LcdBackpack
+    lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
+    lcdscreen.connect()
+    lcdscreen.clear()
+    lcdscreen.write("tramtimer v.03")
 
 # Prints diagnostic data about the information taken for 17/31
 
@@ -50,6 +53,7 @@ def dataDebug(extract):
 # [x] find Sofienberg station ID
 # [ ] get a usable timetuple out of it
 # [ ] merge back
+
 def timeGrabber(stopID, vehicleTypes, lineNos, direction):
 
     grabbedDict = defaultdict(list)
@@ -106,7 +110,7 @@ def mainloop():
         raise
 
     else:
-        if (debug):
+        if debug:
             dataDebug(headways)
 
         top = headways['17']
@@ -125,7 +129,7 @@ def mainloop():
             toptuple = dateutil.relativedelta.relativedelta(top[2], current)
             topcombo += str(toptuple.minutes) + 'm'
 
-        if (debug):
+        if debug:
             print(topcombo)
 
         lcdscreen.clear()
@@ -147,7 +151,7 @@ def mainloop():
                 bottom[2], current)
             bottomcombo += str(bottomtuple.minutes) + 'm'
 
-        if (debug):
+        if debug:
             print(bottomcombo)
         lcdscreen.set_cursor_position(1, 2)
         lcdscreen.write(bottomcombo)
