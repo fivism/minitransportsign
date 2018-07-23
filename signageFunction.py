@@ -20,22 +20,25 @@ import dateutil.relativedelta
 from dateutil.parser import parse
 from time import sleep
 import sys
+import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
 # timeGrabber used once per update, calls all applicable for one stop
 # One stopID and multiple vehicles and line numbers possible
 # A couple shortened keys to keep it simple
+lcd_on = False  # for testing without serial LCD connection
+debug = True    # set extra output on
+# Set required request header for Entur
+headers = {'ET-Client-Name': 'fivism-av`gangskilt'}
+
+api_url = 'https://api.entur.org/journeyplanner/2.0/index/graphql'
+
 MVJ = 'MonitoredVehicleJourney'
 EAT = 'ExpectedArrivalTime'
 
-debug = True
-lcd_output = False
-
-if lcd_output:
-    from lcdbackpack import LcdBackpack
-    lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
-    lcdscreen.connect()
-    lcdscreen.clear()
-    lcdscreen.write("tramtimer v.03")
+lcdscreen = LcdBackpack('/dev/ttyACM0', 115200)
+lcdscreen.connect()
+lcdscreen.clear()
+lcdscreen.write("tramtimer v.03")
 
 # Prints diagnostic data about the information taken for 17/31
 
@@ -50,13 +53,15 @@ def dataDebug(extract):
 
 # TODO now we're going to implement entur API instead of using
 # old reisAPI urls and keys and stationIDs
-# [x] find Sofienberg station ID
-# [ ] get quay IDs
+# [x] find Sofienberg station ID (NSR:StopPlace:58190)
+# [x] find correct quay IDs (NSR:Quay:104048) for 17, (NSR:Quay:11882) for 31
+# [ ] set API client header before request
 # [ ] get a usable timetuple out of it
 # [ ] merge back
 
-def fetch_query(query):
-    
+"""
+Query formed for Sofienberg (on Trondheimsveien)
+"""
 query = """
 {
   stopPlace(id: "NSR:StopPlace:58190") {
@@ -86,6 +91,7 @@ query = """
             name
             transportMode
           }
+          directionType
         }
       }
     }
@@ -93,10 +99,25 @@ query = """
 }
 """
 
+def fetch_query(query):
+    request = requests.post(api_url, json={'query': query}, headers=headers)
+    if request.status_code == 200:
+        return request.json()
+    else:
+        raise Exception("Query failed, received code: {}. {}".format(request.status_code, query))
+
+
+def timeGrabberTemp(query, quay1, quay2):
+    """Collect departure times for given Entur quays.
+    Takes two NSR quay numbers as strings as well as
+    transitline ID (in format 'RUT:Line:31')
+    """
+    grabbedDict = defaultdict(list) # creates empty dict keyed to line number ('17' or '31')
+
+    return grabbedDict
+
 def timeGrabber(stopID, vehicleTypes, lineNos, direction):
-
     grabbedDict = defaultdict(list)
-
     url = "http://reisapi.ruter.no/StopVisit/GetDepartures/" + str(stopID)
     url = url + "?transporttypes=" + vehicleTypes
     url = url + "&linenames=" + lineNos
@@ -120,34 +141,30 @@ def mainloop():
     # Assign trains to track for each line
     try:
         headways = timeGrabber(3010533, "Bus,Tram", "31,17", 2)
-        print(query)
+        print(fetch_query(query))
     except URLError as e:
         if hasattr(e, 'reason'):
             print("Failed to reach server.")
             print("Reason: ", e.reason)
-            if lcd_output:
-                lcdscreen.clear()
-                lcdscreen.write("NO CONNECT")
-                time.sleep(10)
+            lcdscreen.clear()
+            lcdscreen.write("NO CONNECT")
+            time.sleep(10)
     except HTTPError as e:
         print("The server could not fill request.")
         print("HTTP errorno: ", e.code)
-        if lcd_output:
-            lcdscreen.clear()
-            lcdscreen.write("HTTPERR:", e.code)
+        lcdscreen.clear()
+        lcdscreen.write("HTTPERR:", e.code)
         time.sleep(10)
     except ConnectionResetError as e:
         print("CAUGHT ConnectionResetError")
         # print("Code: ", e.code) CRE's have no attr 'code'
-        if lcd_output:
-            lcdscreen.clear()
-            lcdscreen.write("ConnResetError")
+        lcdscreen.clear()
+        lcdscreen.write("ConnResetError")
         time.sleep(10)
     except ValueError as e:
         print("VALUE ERROR:", e)
-        if lcd_output:
-            lcdscreen.clear()
-            lcdscreen.write("VALERROR")
+        lcdscreen.clear()
+        lcdscreen.write("VALERROR")
         time.sleep(10)
     except:
         print("UNEXPECTED ERROR:", sys.exc_info()[0])
@@ -176,9 +193,8 @@ def mainloop():
         if debug:
             print(topcombo)
 
-        if lcd_output:
-            lcdscreen.clear()
-            lcdscreen.write(topcombo)
+        lcdscreen.clear()
+        lcdscreen.write(topcombo)
 
         # Write 'bottom' list
         if len(bottom) == 0:
@@ -198,10 +214,8 @@ def mainloop():
 
         if debug:
             print(bottomcombo)
-
-        if lcd_output:
-            lcdscreen.set_cursor_position(1, 2)
-            lcdscreen.write(bottomcombo)
+        lcdscreen.set_cursor_position(1, 2)
+        lcdscreen.write(bottomcombo)
 
         time.sleep(20)
 
