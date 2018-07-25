@@ -45,6 +45,7 @@ if LCD_ON:
     lcdscreen.clear()
     lcdscreen.write("tramtimer v.03")
 
+
 """
 Query formed for Sofienberg (on Trondheimsveien)
 """
@@ -124,14 +125,6 @@ def mainloop():
     # Assign trains to track for each line
     try:
         headways = timeGrabber()
-    except URLError as e:
-        if hasattr(e, 'reason'):
-            print("Failed to reach server.")
-            print("Reason: ", e.reason)
-            if LCD_ON:
-                lcdscreen.clear()
-                lcdscreen.write("NO CONNECT")
-            time.sleep(10)
     except HTTPError as e:
         print("The server could not fill request.")
         print("HTTP errorno: ", e.code)
@@ -153,8 +146,12 @@ def mainloop():
             lcdscreen.write("VALERROR")
         time.sleep(10)
     except:
-        print("UNEXPECTED ERROR:", sys.exc_info()[0])
-        raise
+        print("ERROR CODE:", sys.exc_info()[0])
+        if LCD_ON:
+            lcdscreen.clear()
+            lcdscreen.write("VALERROR")
+        time.sleep(10)
+        # raise
 
     else:
         if DEBUG:
