@@ -22,21 +22,37 @@ from time import sleep
 import sys
 import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
-LCD_ON = True  # for testing with/without serial LCD connection
-DEBUG = False    # set extra output on
+LCD_ON = False  # for testing with/without serial LCD connection
+DEBUG = True    # set extra output on
 
 # Set required request header for Entur
 headers = {'ET-Client-Name': 'fivism-avgangskilt'}
 api_url = 'https://api.entur.org/journeyplanner/2.0/index/graphql'
 
+# Relevant profiles dict TODO: Read this in as a separate file
+ST_DICT = { "17-downtown": ['NSR:StopPlace:58190', 'NSR:Quay:104048', 'RUT:Line:17', '17'],
+            "31-downtown": ['NSR:StopPlace:58190', 'NSR:Quay:11882', 'RUT:Line:31', '31'],
+            "21-west": ['NSR:StopPlace:58189', 'NSR:Quay:11048', 'RUT:Line:21', '21']
+}
+
+# Selected profiles to display (Only 2 profiles on 16x2 display)
+PROFILE_1 = ST_DICT['17-downtown']
+PROFILE_2 = ST_DICT['31-downtown']
+
 # Station and quays to seek
-STATION_ID = 'NSR:StopPlace:58190'  #TODO use as constant
-QUAY_1 = 'NSR:Quay:104048'
-QUAY_2 = 'NSR:Quay:11882'
+STATION_ID = PROFILE_1[0]  #TODO actually use as constant
+STATION_ID_2 = PROFILE_2[0]
+
+QUAY_1 = PROFILE_1[1]  # 17
+QUAY_2 = PROFILE_2[1]   # 31
 
 # Transit lines to display
-LINE_1 = 'RUT:Line:17'
-LINE_2 = 'RUT:Line:31'
+LINE_1 = PROFILE_1[2]
+LINE_2 = PROFILE_2[2]
+
+# Line display linenames
+NAME_1 = PROFILE_1[3]
+NAME_2 = PROFILE_2[3]
 
 if LCD_ON:
     from lcdbackpack import LcdBackpack
@@ -49,42 +65,44 @@ if LCD_ON:
 """
 Query formed for Sofienberg (on Trondheimsveien)
 """
-sofberg_query = """
-{
-  stopPlace(id: "NSR:StopPlace:58190") {
-    id
-    name
-    estimatedCalls(timeRange: 72100, numberOfDepartures: 20) {
-      realtime
-      aimedArrivalTime
-      aimedDepartureTime
-      expectedArrivalTime
-      expectedDepartureTime
-      actualArrivalTime
-      actualDepartureTime
-      date
-      forBoarding
-      forAlighting
-      destinationDisplay {
-        frontText
-      }
-      quay {
+def query_maker(profile):
+    query_output = """
+    {{
+      stopPlace(id: "{stop_id}") {{
         id
-      }
-      serviceJourney {
-        journeyPattern {
-          line {
+        name
+        estimatedCalls(timeRange: 72100, numberOfDepartures: 20) {{
+          realtime
+          aimedArrivalTime
+          aimedDepartureTime
+          expectedArrivalTime
+          expectedDepartureTime
+          actualArrivalTime
+          actualDepartureTime
+          date
+          forBoarding
+          forAlighting
+          destinationDisplay {{
+            frontText
+          }}
+          quay {{
             id
-            name
-            transportMode
-          }
-          directionType
-        }
-      }
-    }
-  }
-}
-"""
+          }}
+          serviceJourney {{
+            journeyPattern {{
+              line {{
+                id
+                name
+                transportMode
+              }}
+              directionType
+            }}
+          }}
+        }}
+      }}
+    }}
+    """.format(stop_id=profile[0])
+    return query_output
 
 def fetch_query(query):
     request = requests.post(api_url, json={'query': query}, headers=headers)
@@ -100,11 +118,16 @@ def timeGrabber():
     transitline ID (in format 'RUT:Line:31')
     """
     grabbedDict = defaultdict(list) # creates empty dict keyed to line number ('17' or '31')
-    results = fetch_query(sofberg_query)
+    results = fetch_query(query_maker(PROFILE_1)) # Collect first query's results
     all_departures = results['data']['stopPlace']['estimatedCalls']
+
+    results = fetch_query(query_maker(PROFILE_2)) # Collect second query's results
+    all_departures.extend(results['data']['stopPlace']['estimatedCalls'])
 
     i = 0
     for headway in all_departures:
+        print(headway)
+        print()
         if (headway['quay']['id'] == QUAY_1 or QUAY_2):
             grabbedDict[headway['serviceJourney']['journeyPattern']['line']['id']].append(
                 parse(headway['expectedArrivalTime']))
@@ -162,10 +185,10 @@ def mainloop():
 
         # Write "top" list
         if len(top) == 0:
-            topcombo = "17:   n/a"
+            topcombo = NAME_1 + ":   n/a"
         if len(top) > 0:
             toptuple = dateutil.relativedelta.relativedelta(top[0], current)
-            topcombo = "17: " + str(toptuple.minutes) + 'm '
+            topcombo = NAME_1 + ": " + str(toptuple.minutes) + 'm '
         if len(top) > 1:
             toptuple = dateutil.relativedelta.relativedelta(top[1], current)
             topcombo += str(toptuple.minutes) + 'm '
@@ -182,11 +205,11 @@ def mainloop():
 
         # Write 'bottom' list
         if len(bottom) == 0:
-            bottomcombo = "31:   n/a"
+            bottomcombo = NAME_2 + ":   n/a"
         if len(bottom) > 0:
             bottomtuple = dateutil.relativedelta.relativedelta(
                 bottom[0], current)
-            bottomcombo = "31: " + str(bottomtuple.minutes) + 'm '
+            bottomcombo = NAME_2 + ": " + str(bottomtuple.minutes) + 'm '
         if len(bottom) > 1:
             bottomtuple = dateutil.relativedelta.relativedelta(
                 bottom[1], current)
