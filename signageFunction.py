@@ -9,10 +9,7 @@
 # Vehicle = Metro/Tram/Bus/Train or combos of "Tram,Bus"
 ## LineNos = 31 or 17 or "31,17"
 
-import urllib.request
 from collections import defaultdict
-from urllib.error import URLError
-from urllib.error import HTTPError
 import time
 import json
 from datetime import datetime, timezone
@@ -63,7 +60,7 @@ if LCD_ON:
 
 
 """
-Query formed for Sofienberg (on Trondheimsveien)
+Query maker for the Entur GraphQL interface (only modifying NSR StopID here)
 """
 def query_maker(profile):
     query_output = """
@@ -151,16 +148,8 @@ def mainloop():
     # Assign trains to track for each line
     try:
         headways = timeGrabber()
-    except HTTPError as e:
-        print("The server could not fill request.")
-        print("HTTP errorno: ", e.code)
-        if LCD_ON:
-            lcdscreen.clear()
-            lcdscreen.write("HTTPERR:", e.code)
-        time.sleep(10)
     except ConnectionResetError as e:
         print("CAUGHT ConnectionResetError")
-
         if LCD_ON:
             lcdscreen.clear()
             lcdscreen.write("ConnResetError")
@@ -169,7 +158,7 @@ def mainloop():
         print("VALUE ERROR:", e)
         if LCD_ON:
             lcdscreen.clear()
-            lcdscreen.write("VALERROR")
+            lcdscreen.write("VAL Error:", e)
         time.sleep(10)
     except:
         print("ERROR CODE:", sys.exc_info()[0])
@@ -177,7 +166,6 @@ def mainloop():
             lcdscreen.clear()
             lcdscreen.write("VALERROR")
         time.sleep(10)
-        # raise
 
     else:
         if DEBUG:
