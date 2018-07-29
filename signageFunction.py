@@ -23,7 +23,7 @@ import sys
 import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
 LCD_ON = True  # for testing with/without serial LCD connection
-DEBUG = False    # set extra output on
+DEBUG = False  # set extra output on
 
 # Set required request header for Entur
 headers = {'ET-Client-Name': 'fivism-avgangskilt'}
@@ -36,7 +36,7 @@ ST_DICT = { "17-downtown": ['NSR:StopPlace:58190', 'NSR:Quay:104048', 'RUT:Line:
 }
 
 # Selected profiles to display (Only 2 profiles on 16x2 display)
-PROFILE_1 = ST_DICT['17-downtown']
+PROFILE_1 = ST_DICT['21-west']
 PROFILE_2 = ST_DICT['31-downtown']
 
 # Station and quays to seek
@@ -126,9 +126,12 @@ def timeGrabber():
 
     i = 0
     for headway in all_departures:
-        print(headway)
-        print()
-        if (headway['quay']['id'] == QUAY_1 or QUAY_2):
+        print(QUAY_1)
+        print(QUAY_2)
+        if ((headway['quay']['id'] == QUAY_1) or (headway['quay']['id'] == QUAY_2)):
+            # if (headway['realtime'] == True):
+            print(headway)
+            print(headway['quay']['id'])
             grabbedDict[headway['serviceJourney']['journeyPattern']['line']['id']].append(
                 parse(headway['expectedArrivalTime']))
     return grabbedDict
