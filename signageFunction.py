@@ -123,12 +123,7 @@ def timeGrabber():
 
     i = 0
     for headway in all_departures:
-        print(QUAY_1)
-        print(QUAY_2)
         if ((headway['quay']['id'] == QUAY_1) or (headway['quay']['id'] == QUAY_2)):
-            # if (headway['realtime'] == True):
-            print(headway)
-            print(headway['quay']['id'])
             grabbedDict[headway['serviceJourney']['journeyPattern']['line']['id']].append(
                 parse(headway['expectedArrivalTime']))
     return grabbedDict
