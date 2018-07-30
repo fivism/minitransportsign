@@ -58,7 +58,8 @@ if LCD_ON:
 Query maker for the Entur GraphQL interface (only modifying NSR StopID here)
 """
 def query_maker(profile):
-    query_output = """
+    stop_id = profile[0]
+    query_output = f"""
     {{
       stopPlace(id: "{stop_id}") {{
         id
@@ -93,7 +94,7 @@ def query_maker(profile):
         }}
       }}
     }}
-    """.format(stop_id=profile[0])
+    """
     return query_output
 
 def fetch_query(query):
