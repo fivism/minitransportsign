@@ -130,7 +130,7 @@ def dataDebug(extract):
     print(NAME_2 + ": ")
     print(extract[LINE_2])
 
-def line_maker(hdways):
+def line_maker(hdways, line_name):
     # Set current time
     current = datetime.now(timezone.utc)
     minute_list = []
@@ -146,10 +146,9 @@ def line_maker(hdways):
 
     # Time display conditionals
     if len(hdways) == 0:
-        out_string = NAME_1 + ":   n/a"
+        out_string = line_name + ":   n/a"
     if len(hdways) > 0:
-        toptuple = dateutil.relativedelta.relativedelta(hdways[0], current)
-        out_string = NAME_1 + ": " + ' '.join(minute_list)
+        out_string = line_name + ": " + ' '.join(minute_list)
 
     return out_string
 
@@ -183,14 +182,14 @@ def mainloop():
         tops = headways[LINE_1]
         bottoms = headways[LINE_2]
 
-        top_line = line_maker(tops)        # Write top list
+        top_line = line_maker(NAME_1, tops)        # Write top list
         if DEBUG:
             print(top_line)
         if LCD_ON:
             lcdscreen.clear()
             lcdscreen.write(top_line)
 
-        bottom_line = line_maker(bottoms)  # Write bottom list
+        bottom_line = line_maker(NAME_2, bottoms)  # Write bottom list
         if DEBUG:
             print(bottom_line)
         if LCD_ON:
