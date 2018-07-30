@@ -19,8 +19,8 @@ from time import sleep
 import sys
 import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
-LCD_ON = True  # for testing with/without serial LCD connection
-DEBUG = False  # set extra output on
+LCD_ON = False  # for testing with/without serial LCD connection
+DEBUG = True  # set extra output on
 
 # Set required request header for Entur
 headers = {'ET-Client-Name': 'fivism-avgangskilt'}
@@ -68,7 +68,7 @@ def query_maker(profile):
       stopPlace(id: "{stop_id}") {{
         id
         name
-        estimatedCalls(timeRange: 72100, numberOfDepartures: 25) {{
+        estimatedCalls(timeRange: 72100, numberOfDepartures: 30) {{
           realtime
           aimedArrivalTime
           aimedDepartureTime
@@ -135,10 +135,30 @@ def dataDebug(extract):
     print(NAME_2 + ": ")
     print(extract[LINE_2])
 
-def mainloop():
+def line_maker(hdways):
     # Set current time
     current = datetime.now(timezone.utc)
+    minute_list = []
 
+    for headway in hdways:
+        diff = dateutil.relativedelta.relativedelta(headway, current)
+        mins = diff.minutes
+        if diff.hours > 0:
+            mins += diff.hours * 60
+        minute_list.append(str(mins) + "m")
+        if len(minute_list) == 3:
+            break
+
+    # Time display conditionals
+    if len(hdways) == 0:
+        out_string = NAME_1 + ":   n/a"
+    if len(hdways) > 0:
+        toptuple = dateutil.relativedelta.relativedelta(hdways[0], current)
+        out_string = NAME_1 + ": " + ' '.join(minute_list)
+
+    return out_string
+
+def mainloop():
     # Assign trains to track for each line
     try:
         headways = timeGrabber()
@@ -165,54 +185,24 @@ def mainloop():
         if DEBUG:
             dataDebug(headways)
 
-        top = headways[LINE_1]
-        bottom = headways[LINE_2]
+        tops = headways[LINE_1]
+        bottoms = headways[LINE_2]
 
-        # Write "top" list
-        if len(top) == 0:
-            topcombo = NAME_1 + ":   n/a"
-        if len(top) > 0:
-            toptuple = dateutil.relativedelta.relativedelta(top[0], current)
-            topcombo = NAME_1 + ": " + str(toptuple.minutes) + 'm '
-        if len(top) > 1:
-            toptuple = dateutil.relativedelta.relativedelta(top[1], current)
-            topcombo += str(toptuple.minutes) + 'm '
-        if len(top) > 2:
-            toptuple = dateutil.relativedelta.relativedelta(top[2], current)
-            topcombo += str(toptuple.minutes) + 'm'
-
+        top_line = line_maker(tops)        # Write top list
         if DEBUG:
-            print(topcombo)
-
+            print(top_line)
         if LCD_ON:
             lcdscreen.clear()
-            lcdscreen.write(topcombo)
+            lcdscreen.write(top_line)
 
-        # Write 'bottom' list
-        if len(bottom) == 0:
-            bottomcombo = NAME_2 + ":   n/a"
-        if len(bottom) > 0:
-            bottomtuple = dateutil.relativedelta.relativedelta(
-                bottom[0], current)
-            bottomcombo = NAME_2 + ": " + str(bottomtuple.minutes) + 'm '
-        if len(bottom) > 1:
-            bottomtuple = dateutil.relativedelta.relativedelta(
-                bottom[1], current)
-            bottomcombo += str(bottomtuple.minutes) + 'm '
-        if len(bottom) > 2:
-            bottomtuple = dateutil.relativedelta.relativedelta(
-                bottom[2], current)
-            bottomcombo += str(bottomtuple.minutes) + 'm'
-
+        bottom_line = line_maker(bottoms)  # Write bottom list
         if DEBUG:
-            print(bottomcombo)
-
+            print(bottom_line)
         if LCD_ON:
             lcdscreen.set_cursor_position(1, 2)
-            lcdscreen.write(bottomcombo)
+            lcdscreen.write(bottom_line)
 
         time.sleep(20)
-
 
 while True:
     mainloop()
