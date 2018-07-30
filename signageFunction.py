@@ -2,12 +2,6 @@
 ##
 # Two line sign that shows two departures for two lines simultaneously
 # and outputs specifically to a 16x2 character display.
-# Sample calls given for Sofienberg Bus and Tram departures going
-# downtown.
-# https://reisapi.ruter.no/StopVisit/GetDepartures/3010533?transporttypes=Bus,Tram&linenames=17,31
-## Sofienberg = 3010533
-# Vehicle = Metro/Tram/Bus/Train or combos of "Tram,Bus"
-## LineNos = 31 or 17 or "31,17"
 
 from collections import defaultdict
 import time
@@ -40,6 +34,7 @@ PROFILE_2 = ST_DICT['31-downtown']
 STATION_ID = PROFILE_1[0]  #TODO actually use as constant
 STATION_ID_2 = PROFILE_2[0]
 
+# Specify quay IDs for each 
 QUAY_1 = PROFILE_1[1]  # 17
 QUAY_2 = PROFILE_2[1]   # 31
 
