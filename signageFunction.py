@@ -13,8 +13,8 @@ from time import sleep
 import sys
 import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
-LCD_ON = True  # for testing with/without serial LCD connection
-DEBUG = False  # set extra output on
+LCD_ON = False  # for testing with/without serial LCD connection
+DEBUG = True  # set extra output on
 
 # Set required request header for Entur
 headers = {'ET-Client-Name': 'fivism-avgangskilt'}
@@ -182,14 +182,14 @@ def mainloop():
         tops = headways[LINE_1]
         bottoms = headways[LINE_2]
 
-        top_line = line_maker(NAME_1, tops)        # Write top list
+        top_line = line_maker(tops, NAME_1)        # Write top list
         if DEBUG:
             print(top_line)
         if LCD_ON:
             lcdscreen.clear()
             lcdscreen.write(top_line)
 
-        bottom_line = line_maker(NAME_2, bottoms)  # Write bottom list
+        bottom_line = line_maker(bottoms, NAME_2)  # Write bottom list
         if DEBUG:
             print(bottom_line)
         if LCD_ON:
