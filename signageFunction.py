@@ -13,8 +13,8 @@ from time import sleep
 import sys
 import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
-LCD_ON = False  # for testing with/without serial LCD connection
-DEBUG = True  # set extra output on
+LCD_ON = True  # for testing with/without serial LCD connection
+DEBUG = False  # set extra output on
 
 # Set required request header for Entur
 headers = {'ET-Client-Name': 'fivism-avgangskilt'}
@@ -34,7 +34,7 @@ PROFILE_2 = ST_DICT['31-downtown']
 STATION_ID = PROFILE_1[0]  #TODO actually use as constant
 STATION_ID_2 = PROFILE_2[0]
 
-# Specify quay IDs for each 
+# Specify quay IDs for each
 QUAY_1 = PROFILE_1[1]  # 17
 QUAY_2 = PROFILE_2[1]   # 31
 
