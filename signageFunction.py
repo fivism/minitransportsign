@@ -68,7 +68,7 @@ def query_maker(profile):
       stopPlace(id: "{stop_id}") {{
         id
         name
-        estimatedCalls(timeRange: 72100, numberOfDepartures: 20) {{
+        estimatedCalls(timeRange: 72100, numberOfDepartures: 25) {{
           realtime
           aimedArrivalTime
           aimedDepartureTime
@@ -121,7 +121,6 @@ def timeGrabber():
     results = fetch_query(query_maker(PROFILE_2)) # Collect second query's results
     all_departures.extend(results['data']['stopPlace']['estimatedCalls'])
 
-    i = 0
     for headway in all_departures:
         if ((headway['quay']['id'] == QUAY_1) or (headway['quay']['id'] == QUAY_2)):
             grabbedDict[headway['serviceJourney']['journeyPattern']['line']['id']].append(
@@ -131,9 +130,9 @@ def timeGrabber():
 def dataDebug(extract):
     print("URLDATA LENGTH " + str(len(extract)))
     print("Headways dict entries for")
-    print("17:")
+    print(NAME_1 + ": ")
     print(extract[LINE_1])
-    print("31:")
+    print(NAME_2 + ": ")
     print(extract[LINE_2])
 
 def mainloop():
