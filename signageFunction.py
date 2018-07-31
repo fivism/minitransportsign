@@ -142,7 +142,7 @@ def line_maker(hdways, line_name):
         if diff.hours > 0:
             mins += diff.hours * 60
         minute_list.append(str(mins) + "m")
-        if len(minute_list) == 3:
+        if len(minute_list) == 3:   # never care about more than 3
             break
 
     # Time display conditionals
