@@ -13,8 +13,8 @@ from time import sleep
 import sys
 import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
-LCD_ON = True  # for testing with/without serial LCD connection
-DEBUG = False  # set extra output on
+LCD_ON = False  # for testing with/without serial LCD connection
+DEBUG = True  # set extra output on
 PROFILE_FILE = "profiles.txt" # config file with ET_CLIENT_NAME and stations
 
 def prof_reader(filename):
@@ -79,9 +79,9 @@ Query maker for the Entur GraphQL interface (only modifying NSR StopID here)
 """
 def query_maker(profile):
     stop_id = profile[0]
-    query_output = f"""
+    query_output = """
     {{
-      stopPlace(id: "{stop_id}") {{
+      stopPlace(id: "{0}") {{
         id
         name
         estimatedCalls(timeRange: 72100, numberOfDepartures: 30) {{
@@ -114,7 +114,7 @@ def query_maker(profile):
         }}
       }}
     }}
-    """
+    """.format(stop_id)
     return query_output
 
 def fetch_query(query):
