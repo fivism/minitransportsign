@@ -13,25 +13,38 @@ from time import sleep
 import sys
 import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
-LCD_ON = True  # for testing with/without serial LCD connection
-DEBUG = False  # set extra output on
+LCD_ON = False  # for testing with/without serial LCD connection
+DEBUG = True  # set extra output on
+PROFILE_FILE = "profiles.txt" # config file with ET_CLIENT_NAME and stations
+
+def prof_reader(filename):
+    """
+    Returns chosen et_client_name (for Entur API)
+    and station profiles from profiles file
+    """
+    new_dict = dict()
+    client_name = ""
+    with open(filename) as f:
+        lines = f.readlines()
+        lines = [line.strip() for line in lines]
+        client_name = lines[0]
+        lines = lines[1:]
+        for line in lines:
+            line = line.split()
+            new_dict[line[0]] = line[1:5]
+    return client_name, new_dict
 
 # Set required request header for Entur
-headers = {'ET-Client-Name': 'fivism-avgangskilt'}
+et_client_name, ST_DICT = prof_reader(PROFILE_FILE)
+headers = {'ET-Client-Name': et_client_name}
 api_url = 'https://api.entur.org/journeyplanner/2.0/index/graphql'
-
-# Relevant profiles dict TODO: Read this in as a separate file
-ST_DICT = { "17-downtown": ['NSR:StopPlace:58190', 'NSR:Quay:104048', 'RUT:Line:17', '17'],
-            "31-downtown": ['NSR:StopPlace:58190', 'NSR:Quay:11882', 'RUT:Line:31', '31'],
-            "21-west": ['NSR:StopPlace:58189', 'NSR:Quay:11048', 'RUT:Line:21', '21']
-}
 
 # Selected profiles to display (Only 2 profiles on 16x2 display)
 PROFILE_1 = ST_DICT['21-west']
 PROFILE_2 = ST_DICT['31-downtown']
 
 # Station and quays to seek
-STATION_ID = PROFILE_1[0]  #TODO actually use as constant
+STATION_ID = PROFILE_1[0]
 STATION_ID_2 = PROFILE_2[0]
 
 # Specify quay IDs for each
