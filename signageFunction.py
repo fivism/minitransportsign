@@ -13,8 +13,8 @@ from time import sleep
 import sys
 import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
-LCD_ON = False  # for testing with/without serial LCD connection
-DEBUG = True  # set extra output on
+LCD_ON = True  # for testing with/without serial LCD connection
+DEBUG = False  # set extra output on
 PROFILE_FILE = "profiles.txt" # config file with ET_CLIENT_NAME and stations
 
 def prof_reader(filename):
