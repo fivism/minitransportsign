@@ -1,0 +1,4 @@
+fivism-avgangskilt
+17-downtown NSR:StopPlace:58190 NSR:Quay:104048 RUT:Line:17 17
+31-downtown NSR:StopPlace:58190 NSR:Quay:11882 RUT:Line:31 31
+21-west NSR:StopPlace:58189 NSR:Quay:11048 RUT:Line:21 21
