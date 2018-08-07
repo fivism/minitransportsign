@@ -24,5 +24,6 @@ python3 /path/to/signageFunction.py &
 ## TODO:
 - [x] migration to entur API (new branch, using this [translation guide](https://rutebanken.atlassian.net/wiki/spaces/PUBLIC/pages/319586310/Migrering+reises+k+API+1.1+-+2.0)
 - [x] Further abstraction for selected lines and directions
-- [ ] Use external profiles-based favorites system + CLI calls
-- [X] Upgrade to python3
+- [x] Use external profiles-based favorites system + CLI calls
+- [x] Upgrade to python3
+- [ ] Better howto 
