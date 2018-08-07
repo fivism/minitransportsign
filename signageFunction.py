@@ -13,8 +13,8 @@ from time import sleep
 import sys
 import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
-LCD_ON = False  # for testing with/without serial LCD connection
-DEBUG = True  # set extra output on
+LCD_ON = True  # for testing with/without serial LCD connection
+DEBUG = False  # set extra output on
 PROFILE_FILE = "profiles.txt" # config file with ET_CLIENT_NAME and stations
 
 def prof_reader(filename):
@@ -34,8 +34,15 @@ def prof_reader(filename):
             new_dict[line[0]] = line[1:5]
     return client_name, new_dict
 
-# Set required request header for Entur
-et_client_name, ST_DICT = prof_reader(PROFILE_FILE)
+try:
+    et_client_name, ST_DICT = prof_reader(PROFILE_FILE)
+except FileNotFoundError:
+    print("profiles.txt missing! Create a profiles file with following format:")
+    print("\tet-client-name")
+    print("\tprofile-name1 NSR-Registry-ID NSR-Quay-ID LineID display-name")
+    print("\tprofile-name2 \" \" \" \"")
+    sys.exit()
+
 headers = {'ET-Client-Name': et_client_name}
 api_url = 'https://api.entur.org/journeyplanner/2.0/index/graphql'
 
