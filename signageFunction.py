@@ -190,7 +190,8 @@ def mainloop():
             lcdscreen.write("VAL Error:", e)
         time.sleep(10)
     except:
-        print("ERROR CODE:", sys.exc_info()[0])
+        print(datetime.datetime.now(), ": ", end='')
+        print("ERROR CODE:", sys.exc_info()[0], sys.exc_info()[1])
         if LCD_ON:
             lcdscreen.clear()
             lcdscreen.write("VAL Error:")
