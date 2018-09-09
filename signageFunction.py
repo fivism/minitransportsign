@@ -15,6 +15,11 @@ import requests # https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366a
 
 LCD_ON = True  # for testing with/without serial LCD connection
 DEBUG = False  # set extra output on
+
+if '--debug' in sys.argv:       # fix this crap
+    LCD_ON = False
+    DEBUG = True
+
 PROFILE_FILE = "profiles.txt" # config file with ET_CLIENT_NAME and stations
 
 def prof_reader(filename):
@@ -190,8 +195,8 @@ def mainloop():
             lcdscreen.write("VAL Error:", e)
         time.sleep(10)
     except:
-        print(datetime.datetime.now(), ": ", end='')
-        print("ERROR CODE:", sys.exc_info()[0], sys.exc_info()[1])
+        print(datetime.now(), ": ", end='')
+        print("ERROR CODE:", sys.exc_info()[0])
         if LCD_ON:
             lcdscreen.clear()
             lcdscreen.write("VAL Error:")
