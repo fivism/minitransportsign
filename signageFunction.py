@@ -199,9 +199,9 @@ def mainloop():
         print("ERROR CODE:", sys.exc_info()[0])
         if LCD_ON:
             lcdscreen.clear()
-            lcdscreen.write("VAL Error:")
+            lcdscreen.write("Connection")
             lcdscreen.set_cursor_position(1, 2)
-            lcdscreen.write(sys.exc_info()[0])
+            lcdscreen.write("Error")
         time.sleep(10)
 
     else:
